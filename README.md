@@ -30,7 +30,15 @@
 
 This repository contains **two powerful n8n workflows** designed to streamline your B2B lead generation and company intelligence operations. All sensitive credentials have been removed, making it safe for GitHub sharing while maintaining full functionality through n8n's credential management system.
 
-### 🎯 What This Does
+### 🎯 Real Workflow in Action
+
+<div align="center">
+  <img src="https://github.com/TarunGoel93/n8n-secure-lead-intelligence-workflow/blob/main/assets/image.png?raw=true" alt="n8n Lead Generation Workflow" width="100%"/>
+  <p><i>Actual n8n workflow canvas showing the complete automation flow</i></p>
+</div>
+
+
+### 🎯 How It Works
 
 ```mermaid
 graph LR
@@ -102,14 +110,27 @@ graph LR
 ### 1️⃣ Lead Generation Workflow
 **`01-lead-generation-workflow.json`**
 
+<div align="center">
+  <img src="https://github.com/TarunGoel93/n8n-secure-lead-intelligence-workflow/blob/main/assets/Screenshot%202026-01-19%20103544.png" alt="Lead Generation Workflow" width="90%"/>
+</div>
+
 > 🎯 **Purpose:** Discover and capture qualified leads from LinkedIn and web sources
 
-**Key Capabilities:**
-- 🔍 LinkedIn profile search and extraction
-- 📊 Lead qualification scoring
-- 🌐 Multi-source data aggregation
-- 📝 Automatic Google Sheets population
-- ⚡ Real-time lead notifications
+**Workflow Components:**
+- 🎬 **Trigger**: Manual execution or scheduled runs
+- 🔄 **Loop Over Items**: Process multiple leads in batch
+- 🌐 **HTTP Requests**: API calls for data enrichment (Apify, Google Serper)
+- 💻 **JavaScript Code Nodes**: Custom data transformation and logic
+- 📊 **Google Sheets Integration**: Automated data storage and updates
+- ♻️ **Replace Me Nodes**: Custom replacement logic for data processing
+
+**Data Flow:**
+1. Initialize workflow with search parameters
+2. Loop through target companies/individuals
+3. Make API calls to gather intelligence
+4. Transform and clean data
+5. Append results to Google Sheets
+6. Handle errors and edge cases
 
 **Ideal For:** SDRs, Sales Teams, Business Development, Marketing Automation
 
@@ -158,6 +179,11 @@ cd n8n-secure-lead-intelligence-workflow/workflows
 # - Open n8n dashboard
 # - Click "Import from File"
 # - Select workflow JSON files
+
+# 4. Save workflow screenshots (optional)
+# - Create 'assets' folder in repository root
+# - Take screenshots of your workflows
+# - Save as workflow-screenshot.png
 ```
 
 ---
@@ -234,6 +260,8 @@ cd n8n-secure-lead-intelligence-workflow/workflows
 
 ## 🏗️ Architecture
 
+### Workflow Structure
+
 ```
 n8n-secure-lead-intelligence-workflow/
 │
@@ -241,12 +269,27 @@ n8n-secure-lead-intelligence-workflow/
 │   ├── 01-lead-generation-workflow.json      # Core lead discovery
 │   └── 02-company-intelligence-workflow.json # Company research
 │
+├── assets/                                     # Workflow screenshots
+│   ├── workflow-screenshot.png
+│   └── lead-generation-workflow.png
+│
 ├── docs/                                       # (Optional) Documentation
 │   ├── setup-guide.md
 │   └── api-reference.md
 │
 └── README.md                                   # This file
 ```
+
+### Node Types Used
+
+| Node Type | Purpose | Count |
+|-----------|---------|-------|
+| 🎬 Manual Trigger | Workflow initiation | 1 |
+| 🔄 Loop | Batch processing | 2 |
+| 🌐 HTTP Request | API integrations | 4 |
+| 💻 JavaScript Code | Data transformation | 6 |
+| 📊 Google Sheets | Data storage | 4 |
+| 🔄 Replace Me | Custom logic | 2 |
 
 ---
 
