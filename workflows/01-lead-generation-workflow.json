@@ -1,0 +1,90 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "jsCode": "const industries = [\"Cybersecurity\",\"AI & Automation\",\"Edtech\",\"Technology & SaaS\",\"Wellness\",\"IT Services\",\"Fintech Startups\",\"Digital Marketing\",\"Metaverse\",\"Blockchain\",\"Gaming\",\"Drone & Tech\",\"Ecommerce\"];const roles = [\"Growth Lead\",\"Partnerships Head\",\"Community Marketing Manager\",\"Business Development Head\",\"Founder\",\"Chief Marketing Officer\",\"Head of Marketing\",\"Brand Manager\"];const states = [\"Bihar\",\"Delhi\",\"Rajasthan\",\"Uttarakhand\",\"Madhya Pradesh\"];const companySize = \"10+\";const items = [];for (const role of roles) {for (const industry of industries) {for (const state of states) {items.push({json:{role,industry,state,companySize}});}}}return items;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-600, 1000],
+      "name": "Generate Search Criteria"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [-350, 1000],
+      "name": "Loop Criteria"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.apify.com/v2/acts/apimaestro~linkedin-profile-search-scraper/run-sync-get-dataset-items",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{ \"current_job_title\": \"{{ $json.role }}\", \"location\": \"{{ $json.state }}\", \"industry\": \"{{ $json.industry }}\", \"extra_filters\": \"company-size:{{ $json.companySize }}\", \"maxResults\": 10 }",
+        "authentication": "genericCredentialType"
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [-50, 1000],
+      "name": "Apify LinkedIn Search"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": "={{ $env.GOOGLE_SHEET_ID }}",
+        "sheetName": "Sheet2",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Full Name": "={{ $json.basic_info.fullname }}",
+            "First Name": "={{ $json.basic_info.first_name }}",
+            "Last Name": "={{ $json.basic_info.last_name }}",
+            "Headline": "={{ $json.basic_info.headline }}",
+            "Profile URL": "={{ $json.basic_info.profile_url }}",
+            "Company": "={{ $json.basic_info.current_company }}"
+          }
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [250, 1000],
+      "name": "Save Leads",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "name": "ADD_YOUR_GOOGLE_CREDENTIAL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://google.serper.dev/search",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "X-API-KEY", "value": "{{ $env.SERPER_API_KEY }}" },
+            { "name": "Content-Type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{ \"q\": \"{{ $json.basic_info.current_company }} official website contact email\", \"gl\": \"in\", \"hl\": \"en\" }"
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [550, 1000],
+      "name": "Company SERP Lookup"
+    }
+  ],
+  "connections": {
+    "Generate Search Criteria": { "main": [[{ "node": "Loop Criteria", "type": "main" }]] },
+    "Loop Criteria": { "main": [[], [{ "node": "Apify LinkedIn Search", "type": "main" }]] },
+    "Apify LinkedIn Search": { "main": [[{ "node": "Save Leads", "type": "main" }]] },
+    "Save Leads": { "main": [[{ "node": "Company SERP Lookup", "type": "main" }]] }
+  },
+  "meta": {
+    "instanceId": "SANITIZED_FOR_GITHUB"
+  }
+}
