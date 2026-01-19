@@ -139,6 +139,10 @@ graph LR
 ### 2️⃣ Company Intelligence Workflow
 **`02-company-intelligence-workflow.json`**
 
+<div align="center">
+  <img src="https://github.com/TarunGoel93/n8n-secure-lead-intelligence-workflow/blob/main/assets/Screenshot%202026-01-19%20103949.png" alt="Lead Generation Workflow" width="90%"/>
+</div>
+
 > 🧠 **Purpose:** Deep-dive company research and competitive intelligence gathering
 
 **Key Capabilities:**
